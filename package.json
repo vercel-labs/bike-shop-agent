@@ -1,0 +1,53 @@
+{
+  "name": "bike-shop-dispatcher",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "typecheck": "tsgo --noEmit -p tsconfig.json",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@radix-ui/react-use-controllable-state": "1.2.2",
+    "@shikijs/core": "4.1.0",
+    "@shikijs/engine-javascript": "4.1.0",
+    "@shikijs/engine-oniguruma": "4.1.0",
+    "@streamdown/cjk": "1.0.3",
+    "@streamdown/code": "1.1.1",
+    "@streamdown/math": "1.0.2",
+    "@streamdown/mermaid": "1.0.2",
+    "@tailwindcss/postcss": "4.3.0",
+    "@vercel/connect": "0.2.4",
+    "ai": "7.0.0-canary.171",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "cmdk": "1.1.1",
+    "eve": "^0.10.0",
+    "lucide-react": "1.16.0",
+    "motion": "12.40.0",
+    "nanoid": "5.1.11",
+    "next": "16.2.6",
+    "radix-ui": "1.4.3",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "shiki": "4.1.0",
+    "streamdown": "2.5.0",
+    "tailwind-merge": "3.6.0",
+    "tailwindcss": "4.3.0",
+    "use-stick-to-bottom": "1.1.4",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "25.9.1",
+    "@types/react": "19.2.15",
+    "@types/react-dom": "19.2.3",
+    "@typescript/native-preview": "7.0.0-dev.20260523.1",
+    "typescript": "^5.6.0"
+  },
+  "packageManager": "pnpm@10.33.2+sha512.a90faf6feeab71ad6c6e57f94e0fe1a12f5dcc22cd754db40ae9593eb6a3e0b6b12e3540218bb37ae083404b1f2ce6db2a4121e979829b4aff94b99f49da1cf8"
+}

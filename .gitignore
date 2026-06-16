@@ -1,0 +1,23 @@
+# dependencies
+/node_modules
+
+# eve runtime + build artifacts
+/.eve
+/.next
+/out
+*.tsbuildinfo
+next-env.d.ts
+
+# env / secrets
+.env
+.env*.local
+
+# vercel
+/.vercel
+
+# local tooling
+/.claude/settings.local.json
+
+# os / editor
+.DS_Store
+*.log
