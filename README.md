@@ -1,6 +1,6 @@
 # Bike Maintenance Dispatcher
 
-A sample [Eve](https://eve.dev) agent: the front desk at **Spoke & Mirror Cyclery**.
+A sample [eve](https://eve.dev) agent: the front desk at **Spoke & Mirror Cyclery**.
 Customers describe what their bike is doing, the agent diagnoses, quotes from a real
 catalog, and books a slot. It's a small app that exercises every core Eve primitive
 without the private-beta Connect/warehouse pieces.
