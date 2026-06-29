@@ -22,7 +22,7 @@ export default slackChannel({
 
   events: {
     // Post the final reply back to the thread. Skip interim tool-call narration
-    // so the channel only shows the service writer's actual answer.
+    // so the channel only shows the front-desk advisor's actual answer.
     "message.completed"(eventData, channel, ctx) {
       if (eventData.finishReason === "tool-calls") return;
       if (eventData.message) channel.thread.post(eventData.message);

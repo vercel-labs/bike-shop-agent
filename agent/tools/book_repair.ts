@@ -17,9 +17,11 @@ export default defineTool({
     bikeLabel: z.string().optional().describe("Which of the customer's bikes this is for."),
   }),
   // Cost-based gate: cheap jobs run straight through, big-ticket bookings park
-  // on an approval request. `needsApproval` runs before `execute` and only sees
-  // the tool input, so we re-derive the quote here the same way execute will.
-  needsApproval: ({ toolInput }) =>
+  // on an approval request. `approval` runs before `execute` and sees the
+  // session context plus the tool input, so we re-derive the quote here the
+  // same way execute will. Returning a boolean is shorthand: true means "ask a
+  // human," false means "no approval needed."
+  approval: ({ toolInput }) =>
     quoteCents(toolInput?.serviceIds ?? []) > APPROVAL_THRESHOLD_CENTS,
   async execute({ serviceIds, slotId, bikeLabel }) {
     const names = serviceIds.map((id) => getService(id)?.name ?? id);

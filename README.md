@@ -9,7 +9,7 @@ without the private-beta Connect/warehouse pieces.
 
 | Primitive            | Where                                   | What it does                                              |
 | -------------------- | --------------------------------------- | --------------------------------------------------------- |
-| Agent + persona      | `agent/agent.ts`, `agent/instructions.md` | Model config and the standing service-writer identity.    |
+| Agent + persona      | `agent/agent.ts`, `agent/instructions.md` | Model config and the standing front-desk identity.    |
 | Tools                | `agent/tools/*.ts`                      | Look up services, check openings, book repairs.           |
 | State                | `agent/lib/garage.ts`                   | Remembers the customer's bikes across turns.              |
 | Human-in-the-loop    | `agent/tools/book_repair.ts`            | Parks for approval when the quote tops $150.              |
