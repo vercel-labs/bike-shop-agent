@@ -3,7 +3,8 @@
 A sample [Eve](https://eve.dev) agent: the front desk at **Spoke & Mirror Cyclery**.
 Customers describe what their bike is doing, the agent diagnoses, quotes from a real
 catalog, and books a slot. It's a small app that exercises every core Eve primitive
-without the private-beta Connect/warehouse pieces.
+used in the course, plus a Next.js dashboard and an optional Slack channel backed by
+Vercel Connect.
 
 ## What it demonstrates
 
@@ -15,13 +16,15 @@ without the private-beta Connect/warehouse pieces.
 | Human-in-the-loop    | `agent/tools/book_repair.ts`            | Parks for approval when the quote tops $150.              |
 | Dynamic skill        | `agent/skills/shop-playbook.ts`         | Loads a member/pro playbook from the caller's `tier`.     |
 | Channel auth         | `agent/channels/eve.ts`                 | Stamps the `tier` claim the skill reads.                  |
+| Web dashboard        | `app/`                                  | Streams sessions through Eve's current React API.         |
+| Slack channel        | `agent/channels/slack.ts`                | Receives mentions and replies through Vercel Connect.     |
 | Sandbox seed         | `agent/sandbox/workspace/torque-specs.md` | Reference file mounted into `/workspace`.               |
 
 ## Run it
 
 ```bash
-pnpm install
-eve dev
+npm install
+npm run dev:eve
 ```
 
 Then talk to it in the TUI.
@@ -46,18 +49,22 @@ The second turn still knows the bike. State checkpoints at step boundaries.
 
 > Book the Full Overhaul for Tue 10am.
 
-The $180 quote trips `needsApproval`. The turn parks on an approve/deny prompt and
+The $180 quote trips `approval`. The turn parks on an approve/deny prompt and
 resumes from exactly that step once you answer.
 
 **Dynamic skill (per tier)**
 
 `eve dev` authenticates via `localDev()`, which sets no `tier`, so you get the plain
-desk. To see the member/pro playbook, send the `x-shop-tier` header through the HTTP
-channel — e.g. `x-shop-tier: member` — and the agent will start mentioning the labor
-discount and loaner bikes.
+desk. To see the member/pro playbook over HTTP, send a demo customer cookie such as
+`shop_session=demo-member` or `shop_session=demo-pro`. The server-side customer record,
+not a caller-controlled tier header, supplies the claim.
 
-## Ship it (optional)
+## Web and deployment
 
-This sample runs entirely in the TUI. To add a web dashboard, wrap a Next.js app with
-`withEve` from `eve/next` and drop in a `useEveAgent` chat component (see the docs'
-Step 9), then `vercel deploy`. Ask and I'll scaffold that next.
+Run `npm run dev` for the included Next.js dashboard. When the project and production
+credentials are ready, deploy the complete app with `npx eve deploy`.
+
+The Slack channel expects `SLACK_CONNECTOR` to contain the Vercel Connect client UID.
+It falls back to the course's `slack/spoke-and-mirror` example. Slack authentication
+provides Slack identity, not a shop membership tier; add a trusted server-side mapping
+if Slack customers should receive member or pro behavior.

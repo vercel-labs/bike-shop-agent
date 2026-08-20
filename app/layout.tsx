@@ -20,8 +20,8 @@ const mono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "bike-shop-final",
-  description: "A Next.js starter for Eve agents with AI Elements.",
+  title: "Spoke & Mirror Dispatcher",
+  description: "An Eve-powered bike maintenance dispatcher.",
 };
 
 export default function RootLayout({ children }: { readonly children: ReactNode }) {

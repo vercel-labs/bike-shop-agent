@@ -11,12 +11,14 @@ import { defaultSlackAuth, slackChannel } from "eve/channels/slack";
 //   vercel connect create slack --triggers
 //   vercel connect detach <uid> --yes
 //   vercel connect attach <uid> --triggers --trigger-path /eve/v1/slack --yes
-// then pass that client's UID below.
+// then set SLACK_CONNECTOR to that client's UID.
 export default slackChannel({
-  credentials: connectSlackCredentials("slack/spoke-and-mirror"),
+  credentials: connectSlackCredentials(
+    process.env.SLACK_CONNECTOR ?? "slack/spoke-and-mirror",
+  ),
 
   // Answer @mentions from a real user; ignore bot chatter. defaultSlackAuth
-  // stamps workspace-scoped auth, which is what the per-tier shop playbook reads.
+  // stamps Slack identity, but does not invent a shop membership tier.
   onAppMention: (ctx, message) =>
     message.author ? { auth: defaultSlackAuth(message, ctx) } : null,
 

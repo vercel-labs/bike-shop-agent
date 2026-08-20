@@ -1,7 +1,9 @@
 "use client";
 
+import type { UserContent } from "ai";
 import { useEveAgent } from "eve/react";
 import { AlertCircleIcon } from "lucide-react";
+import { useState } from "react";
 import {
   Conversation,
   ConversationContent,
@@ -16,26 +18,55 @@ import {
 import { cn } from "@/lib/utils";
 import { AgentMessage } from "./agent-message";
 
-const AGENT_NAME = "bike-shop-final";
+const AGENT_NAME = "Spoke & Mirror";
 
 type AgentStatus = ReturnType<typeof useEveAgent>["status"];
 
 export function AgentChat() {
+  const [cancellationError, setCancellationError] = useState<string>();
   const agent = useEveAgent();
   const isBusy = agent.status === "submitted" || agent.status === "streaming";
   const isEmpty = agent.data.messages.length === 0;
+  const errorMessage = cancellationError ?? agent.error?.message;
+
+  const requestCancellation = () => {
+    setCancellationError(undefined);
+    void agent.cancel().catch((error: unknown) => {
+      setCancellationError(toErrorMessage(error));
+    });
+  };
 
   const handleSubmit = async (message: PromptInputMessage) => {
     const text = message.text.trim();
-    if (!text || isBusy) return;
+    if ((text.length === 0 && message.files.length === 0) || isBusy) return;
 
-    await agent.send({ message: text });
+    setCancellationError(undefined);
+
+    if (message.files.length === 0) {
+      await agent.send(text);
+      return;
+    }
+
+    const parts: UserContent = [];
+    if (text.length > 0) {
+      parts.push({ text, type: "text" });
+    }
+    for (const file of message.files) {
+      parts.push({
+        data: file.url,
+        filename: file.filename,
+        mediaType: file.mediaType,
+        type: "file",
+      });
+    }
+
+    await agent.send(parts);
   };
 
   const composer = (
     <PromptInput onSubmit={handleSubmit}>
       <PromptInputTextarea placeholder="Send a message…" />
-      <PromptInputSubmit onStop={agent.stop} status={agent.status} />
+      <PromptInputSubmit onStop={requestCancellation} status={agent.status} />
     </PromptInput>
   );
 
@@ -48,13 +79,13 @@ export function AgentChat() {
         </header>
       )}
 
-      {agent.error ? (
+      {errorMessage ? (
         <div className="mx-auto w-full max-w-3xl shrink-0 px-4 pt-2 sm:px-6">
           <div className="flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2.5 text-sm">
             <AlertCircleIcon className="mt-0.5 size-4 shrink-0 text-destructive" />
             <div>
               <p className="font-medium">Request failed</p>
-              <p className="mt-0.5 text-muted-foreground">{agent.error.message}</p>
+              <p className="mt-0.5 text-muted-foreground">{errorMessage}</p>
             </div>
           </div>
         </div>
@@ -71,7 +102,10 @@ export function AgentChat() {
                 }
                 key={message.id}
                 message={message}
-                onInputResponses={(inputResponses) => agent.send({ inputResponses })}
+                onInputResponses={(inputResponses) => {
+                  setCancellationError(undefined);
+                  return agent.respond(inputResponses);
+                }}
               />
             ))}
           </ConversationContent>
@@ -92,6 +126,10 @@ export function AgentChat() {
       </div>
     </main>
   );
+}
+
+function toErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : "Unable to cancel the response.";
 }
 
 function StatusDot({ status }: { readonly status: AgentStatus }) {

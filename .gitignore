@@ -4,6 +4,7 @@
 # eve runtime + build artifacts
 /.eve
 /.next
+/.output
 /out
 *.tsbuildinfo
 next-env.d.ts
